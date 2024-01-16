@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/clear.png</file>
+        <file>img/file.png</file>
+        <file>img/send.png</file>
+        <file>img/setting.png</file>
+        <file>img/top.png</file>
+        <file>img/gpt.png</file>
+    </qresource>
+</RCC>
