@@ -34,7 +34,6 @@ private:
 	void receiveErrorMsg(const QString& errorMsg);
 	//事件过滤器
 	bool eventFilter(QObject* obj, QEvent* event) override;
-
 signals:
 	//发送GPT消息
 	void sendGPTMsg(QString GPTMsg);

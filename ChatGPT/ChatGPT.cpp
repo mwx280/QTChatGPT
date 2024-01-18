@@ -6,7 +6,7 @@ ChatGPT::ChatGPT(QWidget* parent)
 	ui.setupUi(this);
 	ui.textEditUser->installEventFilter(this);//安装事件过滤器
 	ui.textEditGPT->setReadOnly(true);//禁止用户编辑
-	this->showMaximized();
+	//this->showMaximized();
 	this->setWindowIcon(QIcon(":/img/gpt.png"));
 	//初始化按钮控件
 	initButton(ui.btnTop, "置顶窗口", ":/img/top.png");
@@ -198,6 +198,7 @@ void ChatGPT::sendToGPT()
 void ChatGPT::receiveGPTMsg(const QString& GPTMsg)
 {
 	ui.btnSend->setEnabled(true);					//设置按钮可用
+	qDebug() << GPTMsg.toHtmlEscaped();
 	//输出html使文本框变色
 	ui.textEditGPT->append(QString("<span style=\"color: red;\"><pre>%1</pre></span>").arg(GPTMsg.toHtmlEscaped()));
 
