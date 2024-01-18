@@ -28,12 +28,19 @@ private:
 	void wirteToFile();
 	//询问GPT
 	void sendToGPT();
+	//处理GPT消息
+	void receiveGPTMsg(const QString& GPTMsg);
+	//请求错误
+	void receiveErrorMsg(const QString& errorMsg);
 	//事件过滤器
 	bool eventFilter(QObject* obj, QEvent* event) override;
+
 signals:
-	void updateUI(QString msg);
+	//发送GPT消息
+	void sendGPTMsg(QString GPTMsg);
+	//发送请求错误消息
+	void sendPostErrorMsg(QString errorMsg);
 protected:
-	bool once = true;
 	QString apiKey = "你的apiKey";
 	QString apiUrl = "https://api.chatanywhere.tech/v1/chat/completions";
 private:

@@ -6,7 +6,7 @@ ChatGPT::ChatGPT(QWidget* parent)
 	ui.setupUi(this);
 	ui.textEditUser->installEventFilter(this);//安装事件过滤器
 	ui.textEditGPT->setReadOnly(true);//禁止用户编辑
-
+	this->showMaximized();
 	this->setWindowIcon(QIcon(":/img/gpt.png"));
 	//初始化按钮控件
 	initButton(ui.btnTop, "置顶窗口", ":/img/top.png");
@@ -26,12 +26,10 @@ ChatGPT::ChatGPT(QWidget* parent)
 	connect(ui.btnTop, &QToolButton::clicked, this, &ChatGPT::topWidget);
 	connect(ui.btnWriteFile, &QToolButton::clicked, this, &ChatGPT::wirteToFile);
 	connect(ui.btnSend, &QToolButton::clicked, this, &ChatGPT::sendToGPT);
-
-	connect(this, &ChatGPT::updateUI, this, [=](const QString& msg)
-		{
-			ui.btnSend->setEnabled(true);//设置按钮可用
-			ui.textEditGPT->append(msg);
-		});
+	//GPT消息处理
+	connect(this, &ChatGPT::sendGPTMsg, this, &ChatGPT::receiveGPTMsg);
+	//连接错误
+	connect(this, &ChatGPT::sendPostErrorMsg, this, &ChatGPT::receiveErrorMsg);
 }
 
 ChatGPT::~ChatGPT()
@@ -49,7 +47,6 @@ void ChatGPT::clearChat()
 {
 	//清空输出框
 	ui.textEditGPT->clear();
-	once = true;
 }
 
 void ChatGPT::topWidget()
@@ -102,12 +99,14 @@ void ChatGPT::sendToGPT()
 		return;
 	}
 	ui.textEditUser->setPlaceholderText("在这里输入你要询问ChatGPT的内容");
-	ui.btnSend->setEnabled(false);//设置按钮不可用
+	ui.btnSend->setEnabled(false);					//设置按钮不可用
+	ui.textEditGPT->moveCursor(QTextCursor::End);	//移动光标到最后一行
 	//组合文本
-	QString msg = "User: " + ui.textEditUser->toPlainText() + "\n";
-	ui.textEditGPT->append(msg);    //追加到显示框
+	QString msg = ui.textEditUser->toPlainText();
+	//输出html使文本框变色
+	ui.textEditGPT->append(QString("<span style=\"color: blue;\"><pre>%1</pre></span>").arg(msg.toHtmlEscaped()));
 	ui.textEditUser->clear();       //清空用户输入框
-	QString sendGPTMsg = ui.textEditGPT->toPlainText(); //给gpt发送的消息
+	QString GPTMsg = ui.textEditGPT->toPlainText(); //给gpt发送的消息
 
 	//创建一个QThread对象
 	QThread* thread = new QThread(this);
@@ -122,7 +121,7 @@ void ChatGPT::sendToGPT()
 			//将角色字段插入到message对象中，值为"user"
 			message.insert("role", "user");
 			//将用户输入的消息内容插入到message对象中
-			message.insert("content", sendGPTMsg);
+			message.insert("content", GPTMsg);
 
 			//创建一个QJsonArray用于存储所有消息
 			QJsonArray messages;
@@ -170,30 +169,21 @@ void ChatGPT::sendToGPT()
 						{
 							//取出第一个choice对象，并从其中获取message字段的值
 							QJsonObject message = choices.at(0).toObject().value("message").toObject();
-							//从message对象中获取content字段的值，并添加到ui.textEditGPT中显示
+							qDebug() << message;
+							//从message对象中获取content字段的值
 							QString content = message.value("content").toString() + "\n";
-
-							if (once)
-							{
-								once = false;
-								emit updateUI("ChatGPT: " + content);
-							}
-							else
-							{
-								emit updateUI(content);//发送消息
-							}
+							emit sendGPTMsg(content);//发送消息
 						}
 					}
 					else
 					{
-						//打印错误信息
-						QMessageBox::about(this, "请求错误", QString("错误原因：%1").arg(reply->errorString()));
+						//发送给主线程错误信息
+						emit sendPostErrorMsg(reply->errorString());
 					}
 
 					//释放reply对象和manager对象
 					reply->deleteLater();
 					manager->deleteLater();
-
 					//退出线程
 					thread->quit();
 				});
@@ -204,6 +194,23 @@ void ChatGPT::sendToGPT()
 
 	//启动线程
 	thread->start();
+}
+
+void ChatGPT::receiveGPTMsg(const QString& GPTMsg)
+{
+	ui.btnSend->setEnabled(true);					//设置按钮可用
+	//输出html使文本框变色
+	ui.textEditGPT->append(QString("<span style=\"color: red;\"><pre>%1</pre></span>").arg(GPTMsg.toHtmlEscaped()));
+
+	ui.textEditGPT->moveCursor(QTextCursor::End);	//移动光标到最后一行
+}
+
+void ChatGPT::receiveErrorMsg(const QString& errorMsg)
+{
+	//提示用户请求错误
+	QMessageBox::about(this, "请求错误", QString("请检查设置中的设置是否正确！\n错误原因：%1").arg(errorMsg));
+	//设置按钮可用
+	ui.btnSend->setEnabled(true);
 }
 
 bool ChatGPT::eventFilter(QObject* obj, QEvent* event)
