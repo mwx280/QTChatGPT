@@ -34,7 +34,7 @@ signals:
 	void updateUI(QString msg);
 protected:
 	bool once = true;
-	QString apiKey = "你的apiKry";
+	QString apiKey = "你的apiKey";
 	QString apiUrl = "https://api.chatanywhere.tech/v1/chat/completions";
 private:
 	QThread* sendThread;//子线程

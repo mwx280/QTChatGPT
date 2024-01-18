@@ -95,6 +95,13 @@ void ChatGPT::wirteToFile()
 
 void ChatGPT::sendToGPT()
 {
+	//判断输入框是否为空
+	if (ui.textEditUser->toPlainText().isEmpty())
+	{
+		ui.textEditUser->setPlaceholderText("输入框不能为空哦！");
+		return;
+	}
+	ui.textEditUser->setPlaceholderText("在这里输入你要询问ChatGPT的内容");
 	ui.btnSend->setEnabled(false);//设置按钮不可用
 	//组合文本
 	QString msg = "User: " + ui.textEditUser->toPlainText() + "\n";
