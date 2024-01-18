@@ -169,7 +169,6 @@ void ChatGPT::sendToGPT()
 						{
 							//取出第一个choice对象，并从其中获取message字段的值
 							QJsonObject message = choices.at(0).toObject().value("message").toObject();
-							qDebug() << message;
 							//从message对象中获取content字段的值
 							QString content = message.value("content").toString() + "\n";
 							emit sendGPTMsg(content);//发送消息
