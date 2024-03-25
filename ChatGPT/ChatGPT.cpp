@@ -10,10 +10,10 @@ ChatGPT::ChatGPT(QWidget* parent)
 	this->setWindowIcon(QIcon(":/img/gpt.png"));
 	//初始化按钮控件
 	initButton(ui.btnTop, "置顶窗口", ":/img/top.png");
-	initButton(ui.btnSetting, "设    置", ":/img/setting.png");
+	initButton(ui.btnSetting, "设      置", ":/img/setting.png");
 	initButton(ui.btnWriteFile, "写入文件", ":/img/file.png");
-	initButton(ui.btnSend, "发    送", ":/img/send.png");
-	initButton(ui.btnClear, "清    空", ":/img/clear.png");
+	initButton(ui.btnSend, "发      送", ":/img/send.png");
+	initButton(ui.btnClear, "清      空", ":/img/clear.png");
 
 	//设置用户输入框为默认焦点
 	ui.textEditUser->setFocus();
