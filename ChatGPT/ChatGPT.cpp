@@ -214,7 +214,7 @@ void ChatGPT::chatGPTSetting()
 	QString str;
 	if (defaultApiKey == apiKey)
 	{
-		str = "默认apiKey";
+		str = "";
 	}
 	else
 	{
@@ -273,8 +273,10 @@ bool ChatGPT::eventFilter(QObject* obj, QEvent* event)
 
 void ChatGPT::getApiKey(const QString& newApiKey)
 {
-	if (newApiKey.isEmpty() || newApiKey == "默认apiKey")
+	if (newApiKey.isEmpty())
 	{
+		//设置为默认apiKey
+		apiKey = defaultApiKey;
 		return;
 	}
 	else

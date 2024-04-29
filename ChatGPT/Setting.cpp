@@ -7,7 +7,7 @@ Setting::Setting(QWidget* parent, QString lineEditText)
 	//设置为模态对话框
 	this->setModal(true);
 	ui.lineEditAPI->setText(lineEditText);
-
+	ui.lineEditAPI->setPlaceholderText("留空为使用默认秘钥");
 	connect(ui.btnOK, &QPushButton::clicked, this, &Setting::btnOKClicked);
 }
 
