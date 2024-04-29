@@ -307,18 +307,25 @@ void ChatGPT::getApiKey(const QString& newApiKey)
 	{
 		//设置为默认apiKey
 		apiKey = defaultApiKey;
+		//清空写入的秘钥信息
+		wirteApiKeyFile("");
 		return;
 	}
 	else
 	{
 		apiKey = newApiKey;
-		//保存apiKey到文件
-		QFile* file = new QFile(this);
-		file->setFileName("data.dat");
-		if (file->open(QIODevice::WriteOnly))
-		{
-			file->write(newApiKey.toUtf8());
-			file->close();
-		}
+		//写入秘钥到文件
+		wirteApiKeyFile(newApiKey);
+	}
+}
+
+void ChatGPT::wirteApiKeyFile(const QString& apiKey)
+{
+	QFile* file = new QFile(this);
+	file->setFileName("data.dat");
+	if (file->open(QIODevice::WriteOnly))
+	{
+		file->write(apiKey.toUtf8());
+		file->close();
 	}
 }

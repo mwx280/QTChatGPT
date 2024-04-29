@@ -49,12 +49,15 @@ signals:
 private:
 	//获取新apiKey
 	void getApiKey(const QString& newApiKey);
+	//秘钥写入文件
+	void wirteApiKeyFile(const QString& apiKey);
 
 protected:
-	QString api = "你的apiKey";
+	QString api = "sk-aoO6n7PsSbf4jdj5G4dmlpD2pZqZXx3wE85C9UlvaozckYcu";
 	QString defaultApiKey = api;
 	QString apiKey = api;
 	QString apiUrl = "https://api.chatanywhere.tech/v1/chat/completions";
+
 private:
 	QThread* sendThread;//子线程
 private:
