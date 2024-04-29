@@ -1,9 +1,22 @@
 ﻿#include "ChatGPT.h"
+#include "Setting.h"
 
 ChatGPT::ChatGPT(QWidget* parent)
 	: QWidget(parent)
 {
 	ui.setupUi(this);
+
+	//判断是否有用户秘钥
+	QFile* file = new QFile(this);
+	file->setFileName("data.dat");
+	if (file->open(QIODevice::ReadOnly))
+	{
+		QByteArray byteData = file->readAll();
+		QString api = QString(byteData);
+		apiKey = api;
+		file->close();
+	}
+
 	ui.textEditUser->installEventFilter(this);//安装事件过滤器
 	ui.textEditGPT->setReadOnly(true);//禁止用户编辑
 	//this->showMaximized();
@@ -26,6 +39,7 @@ ChatGPT::ChatGPT(QWidget* parent)
 	connect(ui.btnTop, &QToolButton::clicked, this, &ChatGPT::topWidget);
 	connect(ui.btnWriteFile, &QToolButton::clicked, this, &ChatGPT::wirteToFile);
 	connect(ui.btnSend, &QToolButton::clicked, this, &ChatGPT::sendToGPT);
+	connect(ui.btnSetting, &QToolButton::clicked, this, &ChatGPT::chatGPTSetting);
 	//GPT消息处理
 	connect(this, &ChatGPT::sendGPTMsg, this, &ChatGPT::receiveGPTMsg);
 	//连接错误
@@ -195,6 +209,25 @@ void ChatGPT::sendToGPT()
 	thread->start();
 }
 
+void ChatGPT::chatGPTSetting()
+{
+	QString str;
+	if (defaultApiKey == apiKey)
+	{
+		str = "默认apiKey";
+	}
+	else
+	{
+		str = apiKey;
+	}
+	Setting* setting = new Setting(this, str);
+	setting->setWindowTitle("ChatGPT设置");
+
+	connect(setting, &Setting::sendApiKey, this, &ChatGPT::getApiKey);
+
+	setting->show();
+}
+
 void ChatGPT::receiveGPTMsg(const QString& GPTMsg)
 {
 	ui.btnSend->setEnabled(true);					//设置按钮可用
@@ -208,7 +241,7 @@ void ChatGPT::receiveGPTMsg(const QString& GPTMsg)
 void ChatGPT::receiveErrorMsg(const QString& errorMsg)
 {
 	//提示用户请求错误
-	QMessageBox::about(this, "请求错误", QString("请检查设置中的设置是否正确！\n错误原因：%1").arg(errorMsg));
+	QMessageBox::about(this, "请求错误", QString("请检查设置中的秘钥是否正确！\n错误原因：%1").arg(errorMsg));
 	//设置按钮可用
 	ui.btnSend->setEnabled(true);
 }
@@ -236,4 +269,24 @@ bool ChatGPT::eventFilter(QObject* obj, QEvent* event)
 
 	//没有合适事件，继续处理事件
 	return QObject::eventFilter(obj, event);
+}
+
+void ChatGPT::getApiKey(const QString& newApiKey)
+{
+	if (newApiKey.isEmpty() || newApiKey == "默认apiKey")
+	{
+		return;
+	}
+	else
+	{
+		apiKey = newApiKey;
+		//保存apiKey到文件
+		QFile* file = new QFile(this);
+		file->setFileName("data.dat");
+		if (file->open(QIODevice::WriteOnly))
+		{
+			file->write(newApiKey.toUtf8());
+			file->close();
+		}
+	}
 }

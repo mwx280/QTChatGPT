@@ -8,6 +8,8 @@
 #include "ui_ChatGPT.h"
 #include <QtNetwork>
 #include <QKeyEvent>
+#include <QLabel>
+#include <QLineEdit>
 
 class ChatGPT : public QWidget
 {
@@ -28,6 +30,8 @@ private:
 	void wirteToFile();
 	//询问GPT
 	void sendToGPT();
+	//设置
+	void chatGPTSetting();
 	//处理GPT消息
 	void receiveGPTMsg(const QString& GPTMsg);
 	//请求错误
@@ -39,11 +43,18 @@ signals:
 	void sendGPTMsg(QString GPTMsg);
 	//发送请求错误消息
 	void sendPostErrorMsg(QString errorMsg);
+
+private:
+	//获取新apiKey
+	void getApiKey(const QString& newApiKey);
+
 protected:
+	QString defaultApiKey = "你的apiKey";
 	QString apiKey = "你的apiKey";
 	QString apiUrl = "https://api.chatanywhere.tech/v1/chat/completions";
 private:
 	QThread* sendThread;//子线程
+	QThread* thread;	//网络请求子线程
 private:
 	Ui::ChatGPTClass ui;
 };

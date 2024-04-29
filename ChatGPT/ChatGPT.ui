@@ -187,6 +187,9 @@ QGroupBox:title
            <property name="styleSheet">
             <string notr="true">	font: 700 11pt &quot;Microsoft YaHei UI&quot;;</string>
            </property>
+           <property name="autoFormatting">
+            <set>QTextEdit::AutoAll</set>
+           </property>
           </widget>
          </item>
         </layout>
