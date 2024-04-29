@@ -53,7 +53,7 @@ private:
 	void wirteApiKeyFile(const QString& apiKey);
 
 protected:
-	QString api = "sk-aoO6n7PsSbf4jdj5G4dmlpD2pZqZXx3wE85C9UlvaozckYcu";
+	QString api = "你的apiKey";
 	QString defaultApiKey = api;
 	QString apiKey = api;
 	QString apiUrl = "https://api.chatanywhere.tech/v1/chat/completions";
