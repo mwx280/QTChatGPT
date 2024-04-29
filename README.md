@@ -3,6 +3,5 @@
 使用国内中转api接口https://api.chatanywhere.tech/v1/chat/completions
 # 中转api的GitHub地址
 https://github.com/chatanywhere/GPT_API_free?tab=readme-ov-file
-# Resele.zip是已经打包好的文件，使用免费密钥
-# 未完成的项目内容
-设置相关内容
+# ChatGPT.exe为打包的安装程序。供用户免费使用。
+添加了设置选项，可以自定义apiKey了！
