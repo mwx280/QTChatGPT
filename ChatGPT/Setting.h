@@ -15,6 +15,7 @@ public:
 	void btnOKClicked();
 
 signals:
+	// 发送apiKey信号
 	void sendApiKey(QString API);
 
 private:

@@ -1,5 +1,6 @@
 ﻿#include "ChatGPT.h"
 #include "Setting.h"
+#include <QDesktopServices>
 
 ChatGPT::ChatGPT(QWidget* parent)
 	: QWidget(parent)
@@ -27,6 +28,7 @@ ChatGPT::ChatGPT(QWidget* parent)
 	initButton(ui.btnWriteFile, "写入文件", ":/img/file.png");
 	initButton(ui.btnSend, "发      送", ":/img/send.png");
 	initButton(ui.btnClear, "清      空", ":/img/clear.png");
+	initButton(ui.btnGitHub, "关于软件", ":/img/github.png");
 
 	//设置用户输入框为默认焦点
 	ui.textEditUser->setFocus();
@@ -40,6 +42,7 @@ ChatGPT::ChatGPT(QWidget* parent)
 	connect(ui.btnWriteFile, &QToolButton::clicked, this, &ChatGPT::wirteToFile);
 	connect(ui.btnSend, &QToolButton::clicked, this, &ChatGPT::sendToGPT);
 	connect(ui.btnSetting, &QToolButton::clicked, this, &ChatGPT::chatGPTSetting);
+	connect(ui.btnGitHub, &QToolButton::clicked, this, &ChatGPT::GitHubPage);
 	//GPT消息处理
 	connect(this, &ChatGPT::sendGPTMsg, this, &ChatGPT::receiveGPTMsg);
 	//连接错误
@@ -228,10 +231,37 @@ void ChatGPT::chatGPTSetting()
 	setting->show();
 }
 
+void ChatGPT::GitHubPage()
+{
+	//创建对话框
+	QDialog* GitHub = new QDialog(this);
+	GitHub->setWindowTitle("关于软件");
+	GitHub->setModal(true);
+	GitHub->setFixedSize(QSize());
+
+	QLabel* label = new QLabel("项目开源地址:", GitHub);
+	//创建跳转按钮
+	QPushButton* btnGitHub = new QPushButton("点击跳转到GItHub", GitHub);
+	btnGitHub->setStyleSheet("QPushButton { color: red; }"
+		"QPushButton:hover { background-color: #e6e6e6; }"
+		"QPushButton:pressed { background-color: #d9d9d9; }");
+
+	connect(btnGitHub, &QPushButton::clicked, this, [=]()
+		{
+			QDesktopServices::openUrl(QUrl("https://github.com/mwx280/QTChatGPT"));
+			GitHub->close();
+		});
+	//添加控件到垂直布局
+	QHBoxLayout* layout = new QHBoxLayout(GitHub);
+	layout->addWidget(label);
+	layout->addWidget(btnGitHub);
+
+	GitHub->show();
+}
+
 void ChatGPT::receiveGPTMsg(const QString& GPTMsg)
 {
 	ui.btnSend->setEnabled(true);					//设置按钮可用
-	qDebug() << GPTMsg.toHtmlEscaped();
 	//输出html使文本框变色
 	ui.textEditGPT->append(QString("<span style=\"color: red;\"><pre>%1</pre></span>").arg(GPTMsg.toHtmlEscaped()));
 

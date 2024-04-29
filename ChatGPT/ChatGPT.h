@@ -32,6 +32,8 @@ private:
 	void sendToGPT();
 	//设置
 	void chatGPTSetting();
+	//GitHub页面
+	void GitHubPage();
 	//处理GPT消息
 	void receiveGPTMsg(const QString& GPTMsg);
 	//请求错误
@@ -49,12 +51,12 @@ private:
 	void getApiKey(const QString& newApiKey);
 
 protected:
-	QString defaultApiKey = "你的apiKey";
-	QString apiKey = "你的apiKey";
+	QString api = "你的apiKey";
+	QString defaultApiKey = api;
+	QString apiKey = api;
 	QString apiUrl = "https://api.chatanywhere.tech/v1/chat/completions";
 private:
 	QThread* sendThread;//子线程
-	QThread* thread;	//网络请求子线程
 private:
 	Ui::ChatGPTClass ui;
 };

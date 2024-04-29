@@ -6,5 +6,6 @@
         <file>img/setting.png</file>
         <file>img/top.png</file>
         <file>img/gpt.png</file>
+        <file>img/github.png</file>
     </qresource>
 </RCC>
