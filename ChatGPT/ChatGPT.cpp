@@ -215,6 +215,7 @@ void ChatGPT::sendToGPT()
 void ChatGPT::chatGPTSetting()
 {
 	QString str;
+	//判断秘钥是否一致，不一致则写入秘钥到文件
 	if (defaultApiKey == apiKey)
 	{
 		str = "";
@@ -225,7 +226,7 @@ void ChatGPT::chatGPTSetting()
 	}
 	Setting* setting = new Setting(this, str);
 	setting->setWindowTitle("ChatGPT设置");
-
+	//从设置页面获取apiKey
 	connect(setting, &Setting::sendApiKey, this, &ChatGPT::getApiKey);
 
 	setting->show();
@@ -245,7 +246,7 @@ void ChatGPT::GitHubPage()
 	btnGitHub->setStyleSheet("QPushButton { color: red; }"
 		"QPushButton:hover { background-color: #e6e6e6; }"
 		"QPushButton:pressed { background-color: #d9d9d9; }");
-
+	//连接按钮信号，点击后跳转到GItHub页面
 	connect(btnGitHub, &QPushButton::clicked, this, [=]()
 		{
 			QDesktopServices::openUrl(QUrl("https://github.com/mwx280/QTChatGPT"));
@@ -321,6 +322,7 @@ void ChatGPT::getApiKey(const QString& newApiKey)
 
 void ChatGPT::wirteApiKeyFile(const QString& apiKey)
 {
+	//写入apiKey到文件
 	QFile* file = new QFile(this);
 	file->setFileName("data.dat");
 	if (file->open(QIODevice::WriteOnly))
