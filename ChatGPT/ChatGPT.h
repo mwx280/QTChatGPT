@@ -45,6 +45,8 @@ signals:
 	void sendGPTMsg(QString GPTMsg);
 	//发送请求错误消息
 	void sendPostErrorMsg(QString errorMsg);
+	//更改语言
+	void languageChanged(QString language);
 
 private:
 	//获取新apiKey

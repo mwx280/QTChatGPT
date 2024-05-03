@@ -23,18 +23,18 @@ ChatGPT::ChatGPT(QWidget* parent)
 	//this->showMaximized();
 	this->setWindowIcon(QIcon(":/img/gpt.png"));
 	//初始化按钮控件
-	initButton(ui.btnTop, "置顶窗口", ":/img/top.png");
-	initButton(ui.btnSetting, "设      置", ":/img/setting.png");
-	initButton(ui.btnWriteFile, "写入文件", ":/img/file.png");
-	initButton(ui.btnSend, "发      送", ":/img/send.png");
-	initButton(ui.btnClear, "清      空", ":/img/clear.png");
-	initButton(ui.btnGitHub, "关于软件", ":/img/github.png");
+	initButton(ui.btnTop, tr("置顶窗口"), ":/img/top.png");
+	initButton(ui.btnSetting, tr("设      置"), ":/img/setting.png");
+	initButton(ui.btnWriteFile, tr("写入文件"), ":/img/file.png");
+	initButton(ui.btnSend, tr("发      送"), ":/img/send.png");
+	initButton(ui.btnClear, tr("清      空"), ":/img/clear.png");
+	initButton(ui.btnGitHub, tr("关于软件"), ":/img/github.png");
 
 	//设置用户输入框为默认焦点
 	ui.textEditUser->setFocus();
 	//设置textedit提示
-	ui.textEditUser->setPlaceholderText("在这里输入你要询问ChatGPT的内容");
-	ui.textEditGPT->setPlaceholderText("ChatGPT的回答会显示在这里");
+	ui.textEditUser->setPlaceholderText(tr("在这里输入你要询问ChatGPT的内容"));
+	ui.textEditGPT->setPlaceholderText(tr("ChatGPT的回答会显示在这里"));
 
 	//连接按钮信号和槽
 	connect(ui.btnClear, &QToolButton::clicked, this, &ChatGPT::clearChat);
@@ -69,24 +69,24 @@ void ChatGPT::clearChat()
 void ChatGPT::topWidget()
 {
 	//通过文字判断窗口是否置顶
-	if (ui.btnTop->text() == "置顶窗口")
+	if (ui.btnTop->text() == tr("置顶窗口"))
 	{
 		this->setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);//窗口置顶
 		this->show();//重新绘制窗口
-		ui.btnTop->setText("取消置顶");
+		ui.btnTop->setText(tr("取消置顶"));
 	}
 	else
 	{
 		this->setWindowFlags(windowFlags() & ~Qt::WindowStaysOnTopHint);//取消置顶
 		this->show();
-		ui.btnTop->setText("置顶窗口");
+		ui.btnTop->setText(tr("置顶窗口"));
 	}
 }
 
 void ChatGPT::wirteToFile()
 {
 	//弹出对话框，让用户选择保存位置
-	QString fileName = QFileDialog::getSaveFileName(this, "保存文件", "ChatGPT", "文本文件 (*.txt)");
+	QString fileName = QFileDialog::getSaveFileName(this, tr("保存文件"), tr("ChatGPT"), tr("文本文件 (*.txt)"));
 	//判断用户选项
 	if (!fileName.isEmpty())
 	{
@@ -98,11 +98,11 @@ void ChatGPT::wirteToFile()
 			QString textData = ui.textEditGPT->toPlainText();//获取输入框文本
 			out << textData;//写入文件
 			file.close();//关闭文件
-			QMessageBox::about(this, "保存完毕", QString("文件已保存到%1").arg(fileName));
+			QMessageBox::about(this, tr("保存完毕"), QString(tr("文件已保存到%1")).arg(fileName));
 		}
 		else
 		{
-			QMessageBox::about(this, "写入文件错误", "无法写入到指定位置！");
+			QMessageBox::about(this, tr("写入文件错误"), tr("无法写入到指定位置！"));
 		}
 	}
 }
@@ -225,9 +225,21 @@ void ChatGPT::chatGPTSetting()
 		str = apiKey;
 	}
 	Setting* setting = new Setting(this, str);
-	setting->setWindowTitle("ChatGPT设置");
+	setting->setWindowTitle(tr("ChatGPT设置"));
 	//从设置页面获取apiKey
 	connect(setting, &Setting::sendApiKey, this, &ChatGPT::getApiKey);
+	//语言切换
+	connect(setting, &Setting::languageChanged, this, [=](const QString& language)
+		{
+			if (language == "zh_CN")
+			{
+				emit languageChanged("zh_CN");
+			}
+			else
+			{
+				emit languageChanged("en_US");
+			}
+		});
 
 	setting->show();
 }
@@ -236,13 +248,13 @@ void ChatGPT::GitHubPage()
 {
 	//创建对话框
 	QDialog* GitHub = new QDialog(this);
-	GitHub->setWindowTitle("关于软件");
+	GitHub->setWindowTitle(tr("关于软件"));
 	GitHub->setModal(true);
 	GitHub->setFixedSize(QSize());
 
-	QLabel* label = new QLabel("项目开源地址:", GitHub);
+	QLabel* label = new QLabel(tr("项目开源地址:"), GitHub);
 	//创建跳转按钮
-	QPushButton* btnGitHub = new QPushButton("点击跳转到GItHub", GitHub);
+	QPushButton* btnGitHub = new QPushButton(tr("点击跳转到GItHub"), GitHub);
 	btnGitHub->setStyleSheet("QPushButton { color: red; }"
 		"QPushButton:hover { background-color: #e6e6e6; }"
 		"QPushButton:pressed { background-color: #d9d9d9; }");
@@ -272,7 +284,7 @@ void ChatGPT::receiveGPTMsg(const QString& GPTMsg)
 void ChatGPT::receiveErrorMsg(const QString& errorMsg)
 {
 	//提示用户请求错误
-	QMessageBox::about(this, "请求错误", QString("请检查设置中的秘钥是否正确！\n错误原因：%1").arg(errorMsg));
+	QMessageBox::about(this, tr("请求错误"), QString(tr("请检查设置中的秘钥是否正确！\n错误原因：%1")).arg(errorMsg));
 	//设置按钮可用
 	ui.btnSend->setEnabled(true);
 }

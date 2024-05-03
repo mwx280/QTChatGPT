@@ -7,5 +7,7 @@
         <file>img/top.png</file>
         <file>img/gpt.png</file>
         <file>img/github.png</file>
+        <file>img/DropDown.png</file>
+        <file>img/DropDownHover.png</file>
     </qresource>
 </RCC>

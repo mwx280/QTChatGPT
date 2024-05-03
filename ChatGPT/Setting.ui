@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>287</width>
-    <height>75</height>
+    <height>99</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,6 +25,57 @@
      </item>
      <item>
       <widget class="QLineEdit" name="lineEditAPI"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="maximumSize">
+        <size>
+         <width>70</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>语言:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBoxLanguage">
+       <property name="styleSheet">
+        <string notr="true">QComboBox::drop-down 
+{
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid; /* just a single line */
+    border-top-right-radius: 3px; /* same radius as the QComboBox */
+    border-bottom-right-radius: 3px;
+    border-image: url(:/img/DropDown.png);
+}
+
+QComboBox::drop-down:hover
+{
+	border-image: url(:/img/DropDownHover.png);
+}</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>简体中文</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>English</string>
+        </property>
+       </item>
+      </widget>
      </item>
     </layout>
    </item>
@@ -48,6 +99,8 @@ QPushButton:pressed
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="ChatGPT.qrc"/>
+ </resources>
  <connections/>
 </ui>

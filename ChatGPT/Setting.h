@@ -15,7 +15,9 @@ public:
 	void btnOKClicked();
 
 signals:
-	// 发送apiKey信号
+	//语言切换信号
+	void languageChanged(QString language);
+	//发送apiKey信号
 	void sendApiKey(QString API);
 
 private:
